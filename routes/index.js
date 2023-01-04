@@ -1,3 +1,5 @@
+const axios = require('axios')
+
 const Recette = require("../models/Recette")
 
 module.exports = function(app) {
@@ -18,6 +20,8 @@ module.exports = function(app) {
     app.get("/recettes", async (req,res,next) => {
         Recette.find({}, (err, recettes) => {
           if(!err){
+            axios.get('https://www.example.com').
+
             res.status(200);
             res.send(recettes);
           }
@@ -30,10 +34,43 @@ module.exports = function(app) {
 
     //BY ID
     app.get("/recette/(:id)", async (req,res,next) => {
+      const requests = []
+      const urlList = []
+
+
       Recette.findById(req.params.id, (err, recette) => {
+
         if(!err){
+
+          recette.ingredients.forEach(el => {
+            urlList.push(process.env.API_INGREDIENT+el)
+          });
+
+          urlList.forEach(url => {
+            requests.push(axios.get(url))
+          });
+
+          const data = []
+
+          axios.all(requests)
+          .then(function(){
+            const responses = Array.prototype.slice.call(arguments)
+            axios.spread.apply(null, responses)
+            .then(function() {
+              data = Array.prototype.slice.call(arguments)
+            })
+            .catch(error => {
+              console.log(error)
+              res.send(error)
+            })
+          })
+          .catch(error => {
+            console.log(error)
+            res.send(error)
+          })
+
           res.status(200);
-          res.send(recette);
+          res.send({"recette" : recette, "ingredients": data});
         }
         else{
           res.status(400);
