@@ -60,12 +60,10 @@ module.exports = function(app) {
               data = Array.prototype.slice.call(arguments)
             })
             .catch(error => {
-              console.log(error)
               res.send(error)
             })
           })
           .catch(error => {
-            console.log(error)
             res.send(error)
           })
 
