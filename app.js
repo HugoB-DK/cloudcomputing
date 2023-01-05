@@ -1,24 +1,12 @@
+const express = require('express')
+const app = express()
+const routes = require("./router/routes")
 require('dotenv').config();
+require("./db")
 
-var express = require("express");
+app.use(express.json())
+app.use("/", routes)
 
-const mongoose = require("mongoose");
-mongoose
-.connect(process.env.DB, { useNewUrlParser: true })
-.then(()=>{
-    const app = express()
-
-    app.use(express.json())
-
-
-    app.listen(3000, () => {
-        console.log("Server running on port 3000");
-    });
-    require('./routes')(app);
-    
+app.listen(3000, () => {
+    console.log(`Running on port 3000`)
 })
-.catch((err)=>{
-    console.error(err);
-})
-
-

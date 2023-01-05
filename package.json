@@ -1,7 +1,7 @@
 {
   "name": "cloudcomputing",
   "version": "1.0.0",
-  "description": "REST API for receipe",
+  "description": "REST API for recipe",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
